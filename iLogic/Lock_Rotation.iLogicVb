@@ -1,0 +1,66 @@
+﻿' Erstellt von:  Jan Stäger
+' Version:       IV2022
+' Datum:         02.09.2021
+' Version:       0.1
+' Changelog
+' xx.xx.xxxx
+ 
+'Beschreibung: Ersetzt die iMate Abhängigkeiten der Normteile durch "Einfügen" und sperrt diese.
+
+Sub Main
+	Dim oDoc As Document
+	oDoc = ThisDoc.Document
+	
+	If oDoc.DocumentType = Inventor.DocumentTypeEnum.kAssemblyDocumentObject Then
+		
+		Dim assemblyDoc As AssemblyDocument
+		assemblyDoc = ThisApplication.ActiveDocument
+		TraverseAssembly(assemblyDoc.ComponentDefinition.Occurrences)
+		MessageBox.Show("Rotationen gesperrt", "iLogic", MessageBoxButtons.ok, MessageBoxIcon.Asterisk)
+		
+	Else
+		
+		MessageBox.Show("Dieses Dokument ist keine Baugruppe", "iLogic",MessageBoxButtons.OK,MessageBoxIcon.Information)
+
+	End If
+End Sub
+
+Sub TraverseAssembly(occurrences As ComponentOccurrences)
+	
+	Dim occ As ComponentOccurrence
+	For Each occ In occurrences
+		Logger.Info(occ.Name)
+		If occ.DefinitionDocumentType = kPartDocumentObject Then
+			Dim isContentCenter As Boolean
+			isContentCenter = CheckContentCenter(occ)
+			If isContentCenter = True Then	
+	        Logger.Info(occ.Name & " is a content center part")
+			Lock_Rot(occ)
+		Else 
+			Logger.Info(occ.Name & " is not a content center part")
+		End If
+    	End If
+	Next
+	
+End Sub
+
+Function CheckContentCenter(occ As ComponentOccurrence)As Boolean
+	' check if content center
+   Dim doc As Document
+   doc = occ.Definition.Document
+   
+   If doc.PropertySets.PropertySetExists("ContentCenter") Then
+		Return True
+	Else 
+		Return False
+   End If
+End Function
+
+Function Lock_Rot (occ As ComponentOccurrence)	
+For Each AssConstraint As AssemblyConstraint In occ.Constraints
+		If AssConstraint.Type = kInsertConstraintObject
+		Dim Name As String = AssConstraint.Name
+		AssConstraint = AssConstraint.ConvertToInsertConstraint2(AssConstraint.EntityOne, AssConstraint.EntityTwo, AssConstraint.AxesOpposed, AssConstraint.Distance.Value, True)
+		End If
+Next
+End Function

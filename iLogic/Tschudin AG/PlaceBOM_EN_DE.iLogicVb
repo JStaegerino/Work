@@ -1,0 +1,158 @@
+﻿' Erstellt von:  Jan Stäger / Tobias Wiesendanger
+' Version:       IV2021
+' Datum:         13.10.2020
+' Version:       0.3
+' Changelog
+' 04.10.2021:	Some refactoring / removing of unecesary references / transaction added
+
+'Beschreibung: Erstellt zwei Blätter mit dem Namen "Stückliste_DE" und "Stückliste_EN". Auf beiden wird die Stückliste platziert basierend auf der ersten
+'              Ansicht. Beide verwenden ihren eigenen Stücklistenstil.
+
+Sub Main()
+	
+    Dim oDrawDoc As DrawingDocument
+    oDrawDoc = ThisApplication.ActiveDocument
+    Dim oSheetDE As Sheet
+    Dim oSheetEN As Sheet
+    Dim oSheet01 As Sheet
+	oSheet01 = oDrawDoc.Sheets.Item(1)
+	
+	' Setup Transaction so it can be undone by one click
+	Dim commandTransaction As Transaction
+	commandTransaction = ThisApplication.TransactionManager.StartTransaction(oDrawDoc, "PlaceBOM_EN_DE")
+    
+    ' Delete Sheets that have the same name as we try to create
+    For Each oSheet In oDrawDoc.Sheets
+        If oSheet.Name Like "Stückliste_DE*" Or oSheet.Name Like "Stückliste_EN*" Then
+           oSheet.Delete
+        End If
+    Next
+    
+    '[Create Sheet "Stückliste_DE"
+    Dim oTitleBlockDef1 As TitleBlockDefinition
+    oTitleBlockDef1 = oDrawDoc.ActiveSheet.TitleBlock.Definition
+    
+    Dim oBorderDef1 As BorderDefinition
+    oBorderDef1 = oDrawDoc.ActiveSheet.Border.Definition
+    
+    oSheetDE = oDrawDoc.Sheets.Add(kA4DrawingSheetSize, kPortraitPageOrientation, "Stückliste_DE")
+    
+    Dim oTitleBlock1 As TitleBlock
+    oTitleBlock1 = oSheetDE.AddTitleBlock(oTitleBlockDef1)
+    
+    Call oDrawDoc.ActiveSheet.AddDefaultBorder
+    ']
+	
+    '[Create Sheet "Stückliste_EN"
+    Dim oTitleBlockDef2 As TitleBlockDefinition
+    oTitleBlockDef2 = oDrawDoc.ActiveSheet.TitleBlock.Definition
+    
+    Dim oBorderDef2 As BorderDefinition
+    oBorderDef2 = oDrawDoc.ActiveSheet.Border.Definition
+    
+    oSheetEN = oDrawDoc.Sheets.Add(kA4DrawingSheetSize, kPortraitPageOrientation, "Stückliste_EN")
+    
+    Dim oTitleBlock2 As TitleBlock
+    oTitleBlock2 = oSheetEN.AddTitleBlock(oTitleBlockDef2)
+    
+    Call oDrawDoc.ActiveSheet.AddDefaultBorder
+    ']    
+	
+    ' check if there is already a partslist on Sheet:1 / if yes delete it
+    If oSheet01.PartsLists.Count > 0 Then
+        For Each PartsList In oSheet01.PartsLists
+            PartsList.Delete
+        Next
+    End If
+                 
+    ' reference to first drawing view on sheet:1
+    Dim oDrawingView As DrawingView
+    oDrawingView = oSheet01.DrawingViews(1)
+     
+    ' referenced document of this drawing view
+    Dim oReferenceDoc As Document
+    oReferenceDoc = oDrawingView.ReferencedDocumentDescriptor.ReferencedDocument
+    
+	' check if it is a Part or an Assembly
+	Dim oBorder As Border
+	Dim oPlacementPoint As Point2d
+	Dim oPartsList1 As PartsList
+	
+    If oReferenceDoc.DocumentType = kAssemblyDocumentObject Then
+    
+        Dim oBOM As BOM
+        oBOM = oReferenceDoc.InventorDocument.ComponentDefinition.BOM
+        
+        Dim oPartsListLevel As PartsListLevelEnum
+        
+        ' check what view is enabled in bom / used to add partslist later
+        If oBOM.StructuredViewEnabled = False Then
+           oBOM.StructuredViewEnabled = True
+        End If
+                    
+        If oBOM.StructuredViewFirstLevelOnly Then
+           oPartsListLevel = kStructured
+        Else
+           oPartsListLevel = kStructuredAllLevels
+        End If
+    
+        ' Position of Partslist
+        oBorder = oSheet01.Border
+        
+        oPlacementPoint = ThisApplication.TransientGeometry.CreatePoint2d(0, 0)
+        
+        ' Create the parts list on "Sheet:1".
+        ' make sure Partslistlevel is that of the referenced assembly / otherwise it will fail
+        oPartsList1 = oSheet01.PartsLists.Add(oDrawingView, oPlacementPoint, oPartsListLevel)
+        
+    Else 
+    
+        ' Position of Partslist
+        oBorder = oSheet01.Border
+            
+        oPlacementPoint = ThisApplication.TransientGeometry.CreatePoint2d(0, 0)
+        
+        ' Create the parts list on "Sheet:1".
+        ' make sure Partslistlevel is that of the referenced assembly / otherwise it will fail
+        oPartsList1 = oSheet01.PartsLists.Add(oDrawingView, oPlacementPoint)
+        
+    End If
+        
+    
+    ' Copy Partslist to Sheet "Stückliste_DE" & "Stückliste_EN"
+    Dim oPartsListDE As PartsList
+    Dim oPartsListEN As PartsList
+    
+    oPartsListDE = oPartsList1.CopyTo(oSheetDE)
+    oPartsListEN = oPartsList1.CopyTo(oSheetEN)
+    
+    ' style of the bom
+    oPartsListDE.Style = oDrawDoc.StylesManager.PartsListStyles.Item("Stückliste DE")
+    oPartsListEN.Style = oDrawDoc.StylesManager.PartsListStyles.Item("Stückliste EN")
+    
+    If oSheet01.Size = DrawingSheetSizeEnum.kA0DrawingSheetSize Then
+		xrev = oBorder.RangeBox.MinPoint.X + (oPartsListDE.RangeBox.MaxPoint.X - oPartsListDE.RangeBox.MinPoint.X-1)
+    	yrev = 5.4 + oBorder.RangeBox.MinPoint.Y + (oPartsListDE.RangeBox.MaxPoint.Y - oPartsListDE.RangeBox.MinPoint.Y - 1)
+		
+	Else If oSheet01.Size = DrawingSheetSizeEnum.kA1DrawingSheetSize Then
+		xrev = oBorder.RangeBox.MinPoint.X + (oPartsListDE.RangeBox.MaxPoint.X - oPartsListDE.RangeBox.MinPoint.X-1)
+    	yrev = 5.4 + oBorder.RangeBox.MinPoint.Y + (oPartsListDE.RangeBox.MaxPoint.Y - oPartsListDE.RangeBox.MinPoint.Y - 1)
+	Else
+		xrev = oBorder.RangeBox.MinPoint.X + (oPartsListDE.RangeBox.MaxPoint.X - oPartsListDE.RangeBox.MinPoint.X)
+    	yrev = 5.4 + oBorder.RangeBox.MinPoint.Y + (oPartsListDE.RangeBox.MaxPoint.Y - oPartsListDE.RangeBox.MinPoint.Y)
+	End If
+               
+    oPlacementPoint = ThisApplication.TransientGeometry.CreatePoint2d(xrev, yrev)
+            
+    oPartsListDE.Position = oPlacementPoint
+    oPartsListEN.Position = oPlacementPoint
+    
+    ' delete partslist from first sheet
+    Call oPartsList1.Delete
+    
+    ' "Sheet:1" as active Sheet
+    Call oSheet01.Activate
+	
+	commandTransaction.End
+End Sub
+

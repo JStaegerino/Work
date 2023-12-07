@@ -1,0 +1,10 @@
+﻿' Mensch und Maschine Schweiz AG (Suhr)
+' 
+' Copyright 1992-2021 MuM Schweiz AG  - Tobias Wiesendanger -
+' Beschreibung: Ändert den Blechstil des Dokuments
+' Erstellt  am / 05.11.2021
+' Angepasst am / 	
+Dim oDoc As PartDocument
+oDoc = ThisApplication.ActiveDocument
+
+SheetMetal.SetActiveStyle("Standard_mm")

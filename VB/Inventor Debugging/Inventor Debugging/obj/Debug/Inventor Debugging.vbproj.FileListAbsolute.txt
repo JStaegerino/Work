@@ -1,0 +1,10 @@
+C:\Work\VB\Inventor Debugging\Inventor Debugging\bin\Debug\Inventor Debugging.dll
+C:\Work\VB\Inventor Debugging\Inventor Debugging\bin\Debug\Inventor Debugging.pdb
+C:\Work\VB\Inventor Debugging\Inventor Debugging\bin\Debug\Inventor Debugging.xml
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor Debugging.vbproj.AssemblyReference.cache
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor_Debugging.Resources.resources
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor Debugging.vbproj.GenerateResource.cache
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor Debugging.vbproj.CoreCompileInputs.cache
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor Debugging.dll
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor Debugging.xml
+C:\Work\VB\Inventor Debugging\Inventor Debugging\obj\Debug\Inventor Debugging.pdb

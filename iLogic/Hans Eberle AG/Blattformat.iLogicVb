@@ -1,0 +1,185 @@
+﻿' Erstellt von:  Tobias Wiesendanger
+' Version:		 IV2020
+' Datum: 		 20.01.2020
+' Version:		 0.92
+' Changelog	
+'	27.02.2020 / twi: A4 quer hinzugefügt	
+' 	20.07.2020 / jst: A0-, A1-, A2-, A3-hoch hinzugefügt
+	
+Sub Main()
+	CreateParameter()
+	changeSheetSize(Parameter("Blattgroesse"))
+	moveSymbol
+	ThisApplication.ActiveView.Fit
+End Sub
+
+'-----------------------------------
+' Function change Sheet size
+'-----------------------------------
+Sub changeSheetSize(sheetSize As String)
+oSheet = ThisApplication.ActiveDocument.ActiveSheet
+        
+'Delete Border if there is one
+If Not oSheet.Border Is Nothing Then
+    oSheet.Border.Delete
+End If	
+		
+If sheetSize= "A0 quer" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+	changeBorder("Hans Eberle A0 BG")
+	Else If sheetSize= "A0 hoch" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+	changeBorder("Hans Eberle A0 hoch")
+	
+Else If sheetSize =  "A1 quer" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+	changeBorder("Hans Eberle A1 Eck")
+	Else If sheetSize =  "A1 hoch" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+	changeBorder("Hans Eberle A1 Eck")
+	
+Else If sheetSize = "A2 quer" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+	changeBorder("Hans Eberle A2 Eck")
+	Else If sheetSize = "A2 hoch" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+	changeBorder("Hans Eberle A2 Eck")
+	
+Else If sheetSize= "A3 quer" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+	changeBorder("Standardrahmen")
+	Else If sheetSize= "A3 hoch" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+	changeBorder("Standardrahmen")
+	
+Else If sheetSize= "A4 hoch" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+	changeBorder("Standardrahmen")
+Else If sheetSize= "A4 quer" Then
+	ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+	ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+	changeBorder("Standardrahmen")
+End If
+
+End Sub
+
+
+'-----------------------------------
+' Function Change Border
+'-----------------------------------
+Sub changeBorder(borderName As String)
+	ThisApplication.UserInterfaceManager.DoEvents() 
+	ActiveSheet.Border = borderName
+End Sub
+
+'-----------------------------------
+' move table to top Right
+'-----------------------------------
+Sub moveSymbol()
+	
+	Dim oDrawing As DrawingDocument
+	oDrawing = ThisApplication.ActiveDocument
+	
+	oSheet = oDrawing.ActiveSheet
+	oBorder = oSheet.Border
+	
+	Dim symbol As SketchedSymbol
+	
+	For Each symbol In oSheet.SketchedSymbols
+		
+		If symbol.Name = "Toleranzfeld ISO 2768-m" Then
+			
+			If oBorder.Name = "Hans Eberle A0 BG" Or oBorder.Name = "Hans Eberle A1 Eck" Then
+				oPlaceX = oBorder.RangeBox.MaxPoint.X - 2 'cm
+				oPlaceY = oBorder.RangeBox.MaxPoint.Y- 2  'cm 	
+			Else If oBorder.Name = "Hans Eberle A2 Eck" Then
+				oPlaceX = oBorder.RangeBox.MaxPoint.X - 1 'cm
+				oPlaceY = oBorder.RangeBox.MaxPoint.Y - 1  'cm 
+			Else
+				oPlaceX = oBorder.RangeBox.MaxPoint.X
+				oPlaceY = oBorder.RangeBox.MaxPoint.Y
+			End If
+			
+			'Create Point
+			Dim oTablePt As Point2d
+			oTablePt = ThisApplication.TransientGeometry.CreatePoint2d(oPlaceX, oPlaceY)
+			
+			'Move Symbol
+			symbol.Position= oTablePt		
+		End If			
+	Next
+End Sub
+
+
+'-----------------------------------
+' create parameter if it doesnt exist
+'-----------------------------------
+Sub CreateParameter()
+Dim oDoc As DrawingDocument
+oDoc = ThisApplication.ActiveDocument
+
+oMyParameter = oDoc.Parameters.UserParameters
+
+'Create Parameter if it does not exist
+'Set default to active sheet size
+Try
+	oParameter = oMyParameter.Item("Blattgroesse")
+	Return
+Catch
+	Dim oSheet As Sheet
+	oSheet = oDoc.ActiveSheet
+
+	Dim sheetSize As String
+	Dim oDefault As String
+	sheetSize = oSheet.Size
+	sheetOrientation = oSheet.Orientation
+
+	If sheetSize = "9993" Then
+		If sheetOrientation = "10243" Then	
+			oDefault = "A0 hoch"
+		Else
+			oDefault = "A0 quer"
+		End If
+	Else If sheetSize = "9994" Then
+		If sheetOrientation = "10243" Then	
+			oDefault = "A1 hoch"
+		Else
+			oDefault = "A1 quer"
+		End If
+	Else If sheetSize = "9995" Then
+		If sheetOrientation = "10243" Then	
+			oDefault = "A2 hoch"
+		Else
+			oDefault = "A2 quer"
+		End If
+	Else If sheetSize = "9996" Then
+		If sheetOrientation = "10243" Then	
+			oDefault = "A3 hoch"
+		Else
+			oDefault = "A3 quer"
+		End If
+	Else If sheetSize = "9997" Then
+		If sheetOrientation = "10243" Then	
+			oDefault = "A4 hoch"
+		Else
+			oDefault = "A4 quer"
+		End If
+	Else
+		oDefault = "A4 hoch"
+	End If
+	
+	oParameter = oMyParameter.AddByValue("Blattgroesse", oDefault, UnitsTypeEnum.kTextUnits)
+Finally
+	MultiValue.SetList("Blattgroesse", "A0 quer", "A0 hoch", "A1 quer", "A1 hoch", "A2 quer", "A2 hoch", "A3 quer", "A3 hoch","A4 quer", "A4 hoch")
+End Try
+End Sub
+

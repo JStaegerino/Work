@@ -1,0 +1,27 @@
+﻿' Erstellt von:  Jan Staeger
+' Version:       IV2023
+' Datum:         07.07.2023
+' Version:       0.1
+' Changelog
+
+' Beschreibung: Prüft, ob das Benutzerproperti "Artikelnummer" vorhanden ist und erstellt dies ggf. 
+' Ist das Propertie "Artikelnummer" leer, wird es mit dem Wert von "Bestandsnummer" befüllt.
+' Ist das Propertie "Bezeichnung" leer, wird es mit dem Wert von "Titel" befüllt.
+
+customPropertySet = ThisDoc.Document.PropertySets.Item _
+("Inventor User Defined Properties")
+
+'check if custom propertie exist, else create
+Try
+	propertie = customPropertySet.Item("Artikelnummer")
+Catch
+	customPropertySet.Add("", "Artikelnummer")
+End Try
+
+If iProperties.Value("Custom", "Artikelnummer") = "" Then 
+iProperties.Value("Custom", "Artikelnummer")=  iProperties.Value("Project", "Stock Number")
+End If
+
+If iProperties.Value("Project", "Description") = "" Then 
+iProperties.Value("Project", "Description")=  iProperties.Value("Summary", "Title")
+End If

@@ -1,0 +1,144 @@
+﻿' Erstellt von:  Jan Stäger
+' Version:		 IV2021
+' Datum: 		 02.02.2021
+' Version:		 1.00
+' Changelog	
+'	Steuert das Blattformat
+
+Sub Main()
+	CreateParameter()
+	changeSheetSize(Parameter("Blattgroesse"))
+	ThisApplication.ActiveView.Fit
+End Sub
+
+
+
+'-----------------------------------
+' Function change Sheet size
+'-----------------------------------
+Sub changeSheetSize(sheetSize As String)
+oSheet = ThisApplication.ActiveDocument.ActiveSheet
+Dim oLanguage As String
+oBlattgroesse = Blattgroesse
+
+
+	If sheetSize= "A0 quer"  Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "A0"
+	Else If sheetSize= "A0 hoch" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "Standardrahmen"
+		
+	Else If sheetSize =  "A1 quer" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "A1"
+	Else If sheetSize =  "A1 hoch" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "Standardrahmen"
+		
+	Else If sheetSize = "A2 quer" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "A2"
+	Else If sheetSize = "A2 hoch" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "Standardrahmen"
+		
+	Else If sheetSize= "A3 quer" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "A3"
+	Else If sheetSize= "A3 hoch" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "Standardrahmen"
+		
+	Else If sheetSize= "A4 hoch" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kPortraitPageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "A4"
+	Else If sheetSize= "A4 quer" Then
+		ActiveSheet.ChangeSize(Left(sheetSize,2), moveBorderItems := True)
+		ThisApplication.ActiveDocument.ActiveSheet.Orientation = PageOrientationTypeEnum.kLandscapePageOrientation
+		iProperties.Value("Custom", "Blattgroesse") = Blattgroesse
+		ActiveSheet.Border = "Standardrahmen"
+		
+	End If
+	
+
+
+End Sub
+
+
+'-----------------------------------
+' create parameter if it doesnt exist
+'-----------------------------------
+Sub CreateParameter()
+Dim oDoc As DrawingDocument
+oDoc = ThisApplication.ActiveDocument
+
+oMyParameter = oDoc.Parameters.UserParameters
+
+'Create Parameter if it does not exist
+'Set default to active sheet size
+Try
+	oParameter = oMyParameter.Item("Blattgroesse")
+	Return
+Catch
+	Dim oSheet As Sheet
+	oSheet = oDoc.ActiveSheet
+
+	Dim sheetSize As String
+	Dim sheetOrient As String
+	Dim oDefault As String
+	sheetSize = oSheet.Size
+	sheetOrient = oSheet.Orientation
+
+	If sheetSize = "9993" And sheetOrient = kLandscapePageOrientation Then
+		oDefault = "A0 quer"
+	Else If sheetSize = "9993" And sheetOrient = kPortraitPageOrientation Then
+		oDefault = "A0 hoch"
+	Else If sheetSize = "9994" And sheetOrient = kLandscapePageOrientation Then
+		oDefault = "A1 quer"
+	Else If sheetSize = "9994" And sheetOrient = kPortraitPageOrientation Then
+		oDefault = "A1 hoch"
+	Else If sheetSize = "9995" And sheetOrient = kLandscapePageOrientation Then
+		oDefault = "A2 quer"
+	Else If sheetSize = "9995" And sheetOrient = kPortraitPageOrientation Then
+		oDefault = "A2 hoch"
+	Else If sheetSize = "9996" And sheetOrient = kLandscapePageOrientation Then
+		oDefault = "A3 quer"
+	Else If sheetSize = "9996" And sheetOrient = kPortraitPageOrientation Then
+		oDefault = "A3 hoch"
+	Else If sheetSize = "9997" And sheetOrient = kLandscapePageOrientation Then
+		oDefault = "A4 quer"
+	Else If sheetSize = "9997" And sheetOrient = kPortraitPageOrientation Then
+		oDefault = "A4 hoch"
+	
+	End If
+	
+	
+	oParameter = oMyParameter.AddByValue("Blattgroesse", oDefault, UnitsTypeEnum.kTextUnits)
+	
+Finally
+	MultiValue.SetList("Blattgroesse", "A0 quer", "A0 hoch", "A1 quer", "A1 hoch", "A2 quer", "A2 hoch", "A3 quer", "A3 hoch", "A4 quer", "A4 hoch")
+	
+End Try
+
+
+End Sub
+

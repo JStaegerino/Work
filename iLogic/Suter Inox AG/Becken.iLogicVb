@@ -1,0 +1,408 @@
+﻿'Set Active Document
+Dim oPartDoc As PartDocument
+oPartDoc = ThisDoc.Document
+MultiValue.UpdateAfterChange = True
+MultiValue.SetValueOptions(True, DefaultIndex := 0, NumericCompare := “=”)
+
+Logger.Debug("External Rule runes")
+'[set value list
+
+If Parameter("BeckenBezeichnung") = "Accento" Then
+	Logger.Debug("Accento")
+	MultiValue.SetList("BeckenTyp", "A18", "A34", "A40", "A45", "A50", "A55", "A65", "A75")
+Else If Parameter("BeckenBezeichnung") = "Daneo" Then
+	Logger.Debug("Daneo")
+	MultiValue.SetList("BeckenTyp", "DAN18", "DAN34", "DAN40", "DAN45", "DAN50", "DAN55")
+Else If Parameter("BeckenBezeichnung") = "SilverStar" Then
+	Logger.Debug("SilverStar")
+	MultiValue.SetList("BeckenTyp", "SIL9", "SIL18", "SIL34", "SIL45", "SIL50", "SIS50", "SIL55")
+Else If Parameter("BeckenBezeichnung") = "Comfort" Then
+	Logger.Debug("Comfort")
+	MultiValue.SetList("BeckenTyp", "COM16", "COM34", "COM40")
+Else If Parameter("BeckenBezeichnung") = "Purino" Then
+	Logger.Debug("Purino")
+	MultiValue.SetList("BeckenTyp", "PUR11", "PUR18", "PUR34", "PUR40", "PUR45", "PUR50", "PUO50", "PUR55")
+Else If Parameter("BeckenBezeichnung") = "Gastro Star" Then
+	Logger.Debug("Gastro Star")
+	MultiValue.SetList("BeckenTyp", "GS45", "GS50", "GS55")
+Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" Then
+	Logger.Debug("Gastro MaXX")
+	MultiValue.SetList("BeckenTyp", "GM45", "GM50", "GM55")
+'Else If BeckenBezeichnung = "Rund" Then
+'	Logger.Debug("SilverStar")
+'	MultiValue.SetList("BeckenTyp", "R44")
+Else If Parameter("BeckenBezeichnung") = "Vantis" Then
+	Logger.Debug("Vantis")
+	MultiValue.SetList("BeckenTyp", "V34", "V40", "V45", "V50-35", "V-50-42", "V55")
+End If
+']
+RuleParametersOutput()
+
+
+'[Beckenmasse
+If Parameter("Blechstaerke") < 2 And Parameter("Becken") Then
+	Feature.IsActive("Becken_1") = True
+	If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A18" Then
+		Logger.Debug("A18")
+		Parameter("Becken_Breite") = 179.5 mm
+		Parameter("Becken_Tiefe") = 399.5 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A34" Then
+		Parameter("Becken_Breite") = 341.5 mm
+		Parameter("Becken_Tiefe") = 401.5 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A40" Then
+		Parameter("Becken_Breite") = 402.5 mm
+		Parameter("Becken_Tiefe") = 402.5 mm
+		Parameter("Becken_Radius") = 14 mm
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A45" Then
+		Parameter("Becken_Breite") = 449.5 mm
+		Parameter("Becken_Tiefe") = 399.5 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung")  ="Accento" And Parameter("BeckenTyp") = "A50" Then
+		Parameter("Becken_Breite") = 501 mm
+		Parameter("Becken_Tiefe") = 401 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung") ="Accento" And Parameter("BeckenTyp") ="A55" Then
+		Parameter("Becken_Breite") = 552.3 mm
+		Parameter("Becken_Tiefe") = 401.9 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung") ="Accento" And Parameter("BeckenTyp") ="A65" Then
+		Parameter("Becken_Breite") = 649.5 mm
+		Parameter("Becken_Tiefe") = 399.5 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung") ="Accento" And Parameter("BeckenTyp") ="A75" Then
+		Parameter("Becken_Breite") = 749.5 mm
+		Parameter("Becken_Tiefe") = 399.5 mm
+		Parameter("Becken_Radius") = 11 mm
+	Else If Parameter("BeckenBezeichnung") ="Daneo" And Parameter("BeckenTyp") ="DAN18" Then
+		Parameter("Becken_Breite") = 184 mm
+		Parameter("Becken_Tiefe") = 403.1 mm
+		Parameter("Becken_Radius") = 23 mm
+	Else If Parameter("BeckenBezeichnung") ="Daneo" And Parameter("BeckenTyp") ="DAN34" Then
+		Parameter("Becken_Breite") = 342.8 mm
+		Parameter("Becken_Tiefe") = 402.4 mm
+		Parameter("Becken_Radius") = 22.2 mm
+	Else If Parameter("BeckenBezeichnung") ="Daneo" And Parameter("BeckenTyp") ="DAN40" Then
+		Parameter("Becken_Breite") = 401 mm
+		Parameter("Becken_Tiefe") = 402 mm
+		Parameter("Becken_Radius") = 23 mm
+	Else If Parameter("BeckenBezeichnung") ="Daneo" And Parameter("BeckenTyp") ="DAN45" Then
+		Parameter("Becken_Breite") = 451 mm
+		Parameter("Becken_Tiefe") = 402 mm
+		Parameter("Becken_Radius") = 23 mm
+	Else If Parameter("BeckenBezeichnung") ="Daneo" And Parameter("BeckenTyp") ="DAN50" Then
+		Parameter("Becken_Breite") = 502.2 mm
+		Parameter("Becken_Tiefe") = 402.2 mm
+		Parameter("Becken_Radius") = 23 mm
+	Else If Parameter("BeckenBezeichnung") ="Daneo" And Parameter("BeckenTyp") ="DAN55" Then
+		Parameter("Becken_Breite") = 552.2 mm
+		Parameter("Becken_Tiefe") = 402.3 mm
+		Parameter("Becken_Radius") = 23 mm
+	Else If Parameter("BeckenBezeichnung")="SilverStar" And Parameter("BeckenTyp")="SIL9" Then
+		Parameter("Becken_Breite") = 233 mm
+		Parameter("Becken_Tiefe") = 93 mm
+		Parameter("Becken_Radius") = 44 mm
+	Else If Parameter("BeckenBezeichnung") ="SilverStar" And Parameter("BeckenTyp")="SIL18" Then
+		Parameter("Becken_Breite") = 181.16 mm
+		Parameter("Becken_Tiefe") = 421.7 mm
+		Parameter("Becken_Radius") = 50.5 mm
+	Else If Parameter("BeckenBezeichnung") ="SilverStar" And Parameter("BeckenTyp") ="SIL34" Then
+		Parameter("Becken_Breite") = 341.8 mm
+		Parameter("Becken_Tiefe") = 421.8 mm
+		Parameter("Becken_Radius") = 50.8 mm
+	Else If Parameter("BeckenBezeichnung")="SilverStar" And Parameter("BeckenTyp")="SIL45" Then
+		Parameter("Becken_Breite") = 451.5 mm
+		Parameter("Becken_Tiefe") = 421.55 mm
+		Parameter("Becken_Radius") = 52 mm
+	Else If Parameter("BeckenBezeichnung")="SilverStar" And Parameter("BeckenTyp")="SIL50" Then
+		Parameter("Becken_Breite") = 502.32 mm
+		Parameter("Becken_Tiefe") = 352.82 mm
+		Parameter("Becken_Radius") = 55 mm
+	Else If Parameter("BeckenBezeichnung")="SilverStar" And Parameter("BeckenTyp")="SIS50" Then
+		Parameter("Becken_Breite") = 502 mm
+		Parameter("Becken_Tiefe") = 422.05 mm
+		Parameter("Becken_Radius") = 52 mm
+	Else If Parameter("BeckenBezeichnung")="SilverStar" And Parameter("BeckenTyp")="SIL55" Then
+		Parameter("Becken_Breite") = 552.5 mm
+		Parameter("Becken_Tiefe") = 422.5 mm
+		Parameter("Becken_Radius") = 51 mm
+	Else If Parameter("BeckenBezeichnung")="Comfort" And Parameter("BeckenTyp")="COM16" Then
+		Parameter("Becken_Breite") = 162.5 mm
+		Parameter("Becken_Tiefe") = 343.5 mm
+		Parameter("Becken_Radius") = 51.5 mm
+	Else If Parameter("BeckenBezeichnung")="Comfort" And Parameter("BeckenTyp")="COM34" Then
+		Parameter("Becken_Breite") = 341.8 mm
+		Parameter("Becken_Tiefe") = 421.8 mm
+		Parameter("Becken_Radius") = 50.8 mm
+	Else If Parameter("BeckenBezeichnung")="Comfort" And Parameter("BeckenTyp")="COM40" Then
+		Parameter("Becken_Breite") = 402.7 mm
+		Parameter("Becken_Tiefe") = 422.7 mm
+		Parameter("Becken_Radius") = 50 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR11" Then
+		Parameter("Becken_Breite") = 305 mm
+		Parameter("Becken_Tiefe") = 113 mm
+		Parameter("Becken_Radius") = 20 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR18" Then
+		Parameter("Becken_Breite") = 181 mm
+		Parameter("Becken_Tiefe") = 401 mm
+		Parameter("Becken_Radius") = 15.5 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR34" Then
+		Parameter("Becken_Breite") = 341.5 mm
+		Parameter("Becken_Tiefe") = 401.5 mm
+		Parameter("Becken_Radius") = 15.5 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR40" Then
+		Parameter("Becken_Breite") = 402.5 mm
+		Parameter("Becken_Tiefe") = 402.5 mm
+		Parameter("Becken_Radius") = 18 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR45" Then
+		Parameter("Becken_Breite") = 453.5 mm
+		Parameter("Becken_Tiefe") = 403.32 mm
+		Parameter("Becken_Radius") = 15 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR50" Then
+		Parameter("Becken_Breite") = 503 mm
+		Parameter("Becken_Tiefe") = 352 mm
+		Parameter("Becken_Radius") = 15 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUO50" Then
+		Parameter("Becken_Breite") = 503.6 mm
+		Parameter("Becken_Tiefe") = 403.8 mm
+		Parameter("Becken_Radius") = 18 mm
+	Else If Parameter("BeckenBezeichnung")="Purino" And Parameter("BeckenTyp")="PUR55" Then
+		Parameter("Becken_Breite") = 552.3 mm
+		Parameter("Becken_Tiefe") = 401.9 mm
+		Parameter("Becken_Radius") = 15 mm
+	Else If Parameter("BeckenBezeichnung")="Gastro Star" And Parameter("BeckenTyp")="GS45" Then
+		Parameter("Becken_Breite") = 452 mm
+		Parameter("Becken_Tiefe") = 402 mm
+		Parameter("Becken_Radius") = 31 mm
+	Else If Parameter("BeckenBezeichnung") = "Gastro Star" And Parameter("BeckenTyp") = "GS50" Then
+		Parameter("Becken_Breite") = 500.11 mm
+		Parameter("Becken_Tiefe") = 400.36 mm
+		Parameter("Becken_Radius") = 31 mm
+	Else If Parameter("BeckenBezeichnung") = "Gastro Star" And Parameter("BeckenTyp") = "GS55" Then
+		Parameter("Becken_Breite") = 551.8 mm
+		Parameter("Becken_Tiefe") = 402.5 mm
+		Parameter("Becken_Radius") = 32 mm
+	Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" And Parameter("BeckenTyp") = "GM45" Then
+		Parameter("Becken_Breite") = 451 mm
+		Parameter("Becken_Tiefe") = 401 mm
+		Parameter("Becken_Radius") = 1 mm
+	Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" And Parameter("BeckenTyp") = "GM50" Then
+		Parameter("Becken_Breite") = 501 mm
+		Parameter("Becken_Tiefe") = 401 mm
+		Parameter("Becken_Radius") = 1 mm
+	Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" And Parameter("BeckenTyp") = "GM55" Then
+		Parameter("Becken_Breite") = 551 mm
+		Parameter("Becken_Tiefe") = 401 mm
+		Parameter("Becken_Radius") = 1 mm
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V34" Then
+		Parameter("Becken_Breite") = 341.7 mm
+		Parameter("Becken_Tiefe") = 421.7 mm
+		Parameter("Becken_Radius") = 35.9 mm
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V40" Then
+		Parameter("Becken_Breite") = 401.7 mm
+		Parameter("Becken_Tiefe") = 421.7 mm 
+		Parameter("Becken_Radius") = 35.9 mm
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V45" Then
+		Parameter("Becken_Breite") = 452.1 mm
+		Parameter("Becken_Tiefe") = 422.1 mm
+		Parameter("Becken_Radius") = 35.9 mm
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V50-35" Then
+		Parameter("Becken_Breite") = 501.7 mm
+		Parameter("Becken_Tiefe") = 351.7 mm
+		Parameter("Becken_Radius") = 35.9 mm
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V-50-42" Then
+		Parameter("Becken_Breite") = 501.7 mm
+		Parameter("Becken_Tiefe") = 421.7 mm
+		Parameter("Becken_Radius") = 35.9 mm
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V55" Then
+		Parameter("Becken_Breite") = 551.7 mm
+		Parameter("Becken_Tiefe") = 421.7 mm
+		Parameter("Becken_Radius") = 35.9 mm
+	End If
+	
+Else If Parameter("Blechstaerke") > 2 And Parameter("Becken") Then
+	Feature.IsActive("Becken_1") = True
+	If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A18" Then
+		Parameter("Becken_Breite") = 181.5 
+		Parameter("Becken_Tiefe") = 401.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A34" Then
+		Parameter("Becken_Breite") = 342.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A40" Then
+		Parameter("Becken_Breite") = 402 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A45" Then
+		Parameter("Becken_Breite") = 452.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A50" Then
+		Parameter("Becken_Breite") = 502.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A55" Then
+		Parameter("Becken_Breite") = 552.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A65" Then
+		Parameter("Becken_Breite") = 652.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Accento" And Parameter("BeckenTyp") = "A75" Then
+		Parameter("Becken_Breite") = 752.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 12
+	Else If Parameter("BeckenBezeichnung") = "Daneo" And Parameter("BeckenTyp") = "DAN18" Then
+		Parameter("Becken_Breite") = 182.5 
+		Parameter("Becken_Tiefe") = 403 
+		Parameter("Becken_Radius") = 23
+	Else If Parameter("BeckenBezeichnung") = "Daneo" And Parameter("BeckenTyp") = "DAN34" Then
+		Parameter("Becken_Breite") = 342 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 23
+	Else If Parameter("BeckenBezeichnung") = "Daneo" And Parameter("BeckenTyp") = "DAN40" Then
+		Parameter("Becken_Breite") = 402 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 23
+	Else If Parameter("BeckenBezeichnung") = "Daneo" And Parameter("BeckenTyp") = "DAN45" Then
+		Parameter("Becken_Breite") = 452 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 23
+	Else If Parameter("BeckenBezeichnung") = "Daneo" And Parameter("BeckenTyp") = "DAN50" Then
+		Parameter("Becken_Breite") = 502 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 23
+	Else If Parameter("BeckenBezeichnung") = "Daneo" And Parameter("BeckenTyp") = "DAN55" Then
+		Parameter("Becken_Breite") = 552 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 23
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIL9" Then
+		Parameter("Becken_Breite") = 232 
+		Parameter("Becken_Tiefe") = 93 
+		Parameter("Becken_Radius") = 45.5
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIL18" Then
+		Parameter("Becken_Breite") = 181.5 
+		Parameter("Becken_Tiefe") = 422.5 
+		Parameter("Becken_Radius") = 53.5
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIL34" Then
+		Parameter("Becken_Breite") = 341.5 
+		Parameter("Becken_Tiefe") = 423 
+		Parameter("Becken_Radius") = 53.5
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIL45" Then
+		Parameter("Becken_Breite") = 452.5 
+		Parameter("Becken_Tiefe") = 423 
+		Parameter("Becken_Radius") = 53.5
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIL50" Then
+		Parameter("Becken_Breite") = 502.5 
+		Parameter("Becken_Tiefe") = 353 
+		Parameter("Becken_Radius") = 53.5
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIS50" Then
+		Parameter("Becken_Breite") = 502 
+		Parameter("Becken_Tiefe") = 422 
+		Parameter("Becken_Radius") = 52.5
+	Else If Parameter("BeckenBezeichnung") = "SilverStar" And Parameter("BeckenTyp") = "SIL55" Then
+		Parameter("Becken_Breite") = 551.5 
+		Parameter("Becken_Tiefe") = 421.5 
+		Parameter("Becken_Radius") = 52
+	Else If Parameter("BeckenBezeichnung") = "Comfort" And Parameter("BeckenTyp") = "COM16" Then
+		Parameter("Becken_Breite") = 163 
+		Parameter("Becken_Tiefe") = 343 
+		Parameter("Becken_Radius") = 51
+	Else If Parameter("BeckenBezeichnung") = "Comfort" And Parameter("BeckenTyp") = "COM34" Then
+		Parameter("Becken_Breite") = 343 
+		Parameter("Becken_Tiefe") = 423 
+		Parameter("Becken_Radius") = 57
+	Else If Parameter("BeckenBezeichnung") = "Comfort" And Parameter("BeckenTyp") = "COM40" Then
+		Parameter("Becken_Breite") = 404 
+		Parameter("Becken_Tiefe") = 424 
+		Parameter("Becken_Radius") = 52
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR11" Then
+		Parameter("Becken_Breite") = 307 
+		Parameter("Becken_Tiefe") = 114 
+		Parameter("Becken_Radius") = 21
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR18" Then
+		Parameter("Becken_Breite") = 181 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 15.5
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR34" Then
+		Parameter("Becken_Breite") = 342 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 16
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR40" Then
+		Parameter("Becken_Breite") = 402 
+		Parameter("Becken_Tiefe")  = 402 
+		Parameter("Becken_Radius") = 17
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR45" Then
+		Parameter("Becken_Breite") = 452 
+		Parameter("Becken_Tiefe") = 403 
+		Parameter("Becken_Radius") = 17
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR50" Then
+		Parameter("Becken_Breite") = 503
+		Parameter("Becken_Tiefe") = 352
+		Parameter("Becken_Radius") = 16.5
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUO50" Then
+		Parameter("Becken_Breite") = 502 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 15
+	Else If Parameter("BeckenBezeichnung") = "Purino" And Parameter("BeckenTyp") = "PUR55" Then
+		Parameter("Becken_Breite") = 552 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 17
+	Else If Parameter("BeckenBezeichnung") = "Gastro Star" And Parameter("BeckenTyp") = "GS45" Then
+		Parameter("Becken_Breite") = 452.5 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 30
+	Else If Parameter("BeckenBezeichnung") = "Gastro Star" And Parameter("BeckenTyp") = "GS50" Then
+		Parameter("Becken_Breite") = 502 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 33
+	Else If Parameter("BeckenBezeichnung") = "Gastro Star" And Parameter("BeckenTyp") = "GS55" Then
+		Parameter("Becken_Breite") = 552 
+		Parameter("Becken_Tiefe") = 402 
+		Parameter("Becken_Radius") = 32
+	Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" And Parameter("BeckenTyp") = "GM45" Then
+		Parameter("Becken_Breite") = 453 
+		Parameter("Becken_Tiefe") = 403 
+		Parameter("Becken_Radius") = 1
+	Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" And Parameter("BeckenTyp") = "GM50" Then
+		Parameter("Becken_Breite") = 502.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 1
+	Else If Parameter("BeckenBezeichnung") = "Gastro MaXX" And Parameter("BeckenTyp") = "GM55" Then
+		Parameter("Becken_Breite") = 552.5 
+		Parameter("Becken_Tiefe") = 402.5 
+		Parameter("Becken_Radius") = 1
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V34" Then
+		Parameter("Becken_Breite") = 342 
+		Parameter("Becken_Tiefe") = 422 
+		Parameter("Becken_Radius") = 36
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V40" Then
+		Parameter("Becken_Breite") = 402 
+		Parameter("Becken_Tiefe") = 422 
+		Parameter("Becken_Radius") = 36
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V45" Then
+		Parameter("Becken_Breite") = 452 
+		Parameter("Becken_Tiefe") = 422 
+		Parameter("Becken_Radius") = 36
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V50-35" Then
+		Parameter("Becken_Breite") = 502 
+		Parameter("Becken_Tiefe") = 352 
+		Parameter("Becken_Radius") = 36
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V-50-42" Then
+		Parameter("Becken_Breite") = 502 
+		Parameter("Becken_Tiefe") = 422 
+		Parameter("Becken_Radius") = 36
+	Else If Parameter("BeckenBezeichnung") = "Vantis" And Parameter("BeckenTyp") = "V55" Then
+		Parameter("Becken_Breite") = 552 
+		Parameter("Becken_Tiefe") = 422 
+		Parameter("Becken_Radius") = 36
+	End If
+	Else
+		Feature.IsActive("Becken_1") = False
+		Logger.Debug("No Hole")
+End If
+']
+RuleParametersOutput()

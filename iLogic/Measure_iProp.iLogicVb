@@ -1,0 +1,2 @@
+﻿iProperties.Value("Custom", "Abmessungen") = CStr(Round(Measure.ExtentsLength,2))&" x "&CStr(Round(Measure.ExtentsWidth,2))&" x "&CStr(Round(Measure.ExtentsHeight,2))&"mm "
+iLogicVb.UpdateWhenDone = True

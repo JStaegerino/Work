@@ -1,0 +1,25 @@
+/// <summary>Move an occurrence by name to a position defined by x,y and z. The positioning is based on the world coordinate system(0,0,0).</summary>
+        /// <param name="occurrenceName">Name of the occurrence.</param>
+        /// <param name="xPosition">The x position in mm.</param>
+        /// <param name="yPosition">The y position in mm.</param>
+        /// <param name="zPosition">The z position in mm.</param>
+        /// <example>
+        /// Move occurrence called "RotTransQuader:1" to position x=0, y=0 and z=0.
+        /// <code>AddReference "MuM.ILogicLibrary.dll"
+        /// Dim iLogicLib As New MuM.ILogicLibrary.Lib(ThisDoc)
+        /// iLogicLib.MoveOccAbsolut("RotTransQuader:1",0,0,10)</code></example>
+        internal void MoveOccAbsolut(string occurrenceName, double xPosition, double yPosition, double zPosition)
+        {
+            var asmDefinition = _activeDocument.ComponentDefinition;
+            var occurrenceToMove = GetOccurrence(occurrenceName, asmDefinition);
+            if (occurrenceToMove is null)
+            {
+                _logger.Log($"Failed to find an occurrence with the name: {occurrenceName}",
+                    LogLevel.Error);
+                return;
+            }
+            Matrix matrix = occurrenceToMove.Transformation;
+            Vector transVector = Globals.InvServer.TransientGeometry.CreateVector(Conversion.Mm2Cm(xPosition),Conversion.Mm2Cm(yPosition), Conversion.Mm2Cm(zPosition));
+            matrix.SetTranslation(transVector);
+            occurrenceToMove.SetTransformWithoutConstraints(matrix);
+        }

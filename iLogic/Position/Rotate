@@ -1,0 +1,19 @@
+internal void RotateOccurrence(string occurrenceName, double angle, string axisToRotate, (double x, double y, double z) rotationPoint)
+        {
+            AssemblyComponentDefinition asmDefinition = _activeDocument.ComponentDefinition;
+            Vector rotationAxis = CreateVectorByAxes(axisToRotate, 1, TransformationAction.Rotate);
+            ComponentOccurrence occurrenceToRotate = GetOccurrence(occurrenceName, asmDefinition);
+            if (occurrenceToRotate is null)
+            {
+                _logger.Log($"Failed to find an occurrence with the name: {occurrenceName}",
+                    LogLevel.Error);
+                return;
+            }
+            Matrix matrix = occurrenceToRotate.Transformation;
+            double angleInDegree = Conversion.Deg2Rad(angle);
+            // conversion of rotationPoint
+            var (x, y, z) = rotationPoint;
+            Point pointOfRotation = Globals.InvServer.TransientGeometry.CreatePoint(x, y, z);
+            matrix.SetToRotation(angleInDegree, rotationAxis, pointOfRotation);
+            occurrenceToRotate.Transformation = matrix;
+        }

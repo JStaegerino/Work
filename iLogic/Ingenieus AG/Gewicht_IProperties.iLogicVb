@@ -1,0 +1,49 @@
+﻿'05.02.2021 M.Steiner, MuM Schweiz AG
+
+Sub Main()
+
+    Dim Dateiname As String
+    Dateiname = ThisDoc.Document.FullFileName
+    If Dateiname = "" Then
+        Exit Sub
+    End If
+
+    Dim oDoc = ThisDoc.Document
+    If mFileReadOnly(oDoc) = True Then'the rule can't apply changes if the file is write protected
+        Logger.Debug("Exit Read Only")
+        Exit Sub
+    End If
+
+    Dim propertyName As String = "Gewicht"
+    Dim propertyValue As String
+    propertyValue = ""
+    customPropertySet = ThisDoc.Document.PropertySets.Item("Inventor User Defined Properties") 
+
+        Try
+            prop = customPropertySet.Item(propertyName) 
+            Catch
+            ' Assume error means not found
+            customPropertySet.Add("", propertyName)
+        End Try
+
+    iProperties.Value("Custom", propertyName) = propertyValue
+    Round_Mass_kg = Round(iProperties.Mass, 3) 
+    iProperties.Value("Custom", "Gewicht") = Round_Mass_kg & " kg"
+    Logger.Debug("Gewicht aktualisiert")
+
+End Sub
+
+'Function to validate that the current file is editable.
+Function mFileReadOnly(oDoc As Object)
+    Dim mFileInfo As System.IO.FileInfo'for new document, not saved yet the readonly check is not required
+	Logger.Debug(oDoc.FullFileName)
+    mFileInfo = New System.IO.FileInfo(oDoc.FullFileName)	
+    Logger.Info(mFileInfo.DirectoryName)
+    If mFileInfo.IsReadOnly = False Then
+        Logger.Info("File " & oDoc.DisplayName & "  is Write Enabled")
+        Return False
+        Else
+        Logger.Warn("File " & oDoc.DisplayName & " is ReadOnly; rule " & " stops execution.")
+        Return True
+    End If
+End Function

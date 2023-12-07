@@ -1,0 +1,183 @@
+﻿' Erstellt von:  Jan Stäger
+' Version:       IV2022
+' Datum:         27.06.2022
+' Version:       0.1
+' Changelog
+' 18.07.22 - jst - Beckentyp hinzugefügt
+' DD.MM.YY - <VISUM> - <CHANGES>
+ 
+'Beschreibung: Prüft ob die entsprechenden Parameter vorhanden sind und erstellt diese. 
+'Zusätzlich werden sie in die benutzerdefinierten Properties geschrieben.
+
+
+'Set Active Document
+Dim oPartDoc As PartDocument
+oPartDoc = ThisDoc.Document
+MultiValue.UpdateAfterChange = True
+MultiValue.SetValueOptions(True, DefaultIndex := 0, NumericCompare := “=”)
+
+Dim userParams As UserParameters
+userParams = oPartDoc.ComponentDefinition.Parameters.UserParameters
+
+'Prüft die Parameterliste auf den Parameter "Beckenbezeichnung" und erstellt diesen, falls nötig
+Try
+	oBeckenbezeichnung = userParams("Beckenbezeichnung1")
+	Logger.Info(oPartDoc.DisplayName & " - Parameter Beckenbezeichnung1 exisitert bereits")
+Catch
+	userParams.AddByValue("Beckenbezeichnung1","",UnitsTypeEnum.kTextUnits)
+    MultiValue.SetList("Beckenbezeichnung1", "Accento", "Daneo", "SilverStar", "Comfort", "Gastro MaXX", "R44", "Vantis")
+	Logger.Info(oPartDoc.DisplayName & " - Parameter Beckenbezeichnung1 erstellt")
+End Try
+
+Try
+	oBeckenbezeichnung = userParams("Beckenbezeichnung2")
+	Logger.Info(oPartDoc.DisplayName & " - Parameter Beckenbezeichnung2 exisitert bereits")
+Catch
+	userParams.AddByValue("Beckenbezeichnung2","",UnitsTypeEnum.kTextUnits)
+    MultiValue.SetList("Beckenbezeichnung2", "Accento", "Daneo", "SilverStar", "Comfort", "Gastro MaXX", "R44", "Vantis")
+	Logger.Info(oPartDoc.DisplayName & " - Parameter Beckenbezeichnung2 erstellt")
+End Try
+
+'Prüft die Parameterliste auf den Parameter "Beckentyp" und erstellt diesen, falls nötig
+Try
+    oVentilvariante = userParams("Beckentyp1")
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Beckentyp1 exisitert bereits")
+Catch
+    userParams.AddByValue("Beckentyp1","",UnitsTypeEnum.kTextUnits)
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Beckentyp1 erstellt")
+End Try
+
+Try
+    oVentilvariante = userParams("Beckentyp2")
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Beckentyp2 exisitert bereits")
+Catch
+    userParams.AddByValue("Beckentyp2","",UnitsTypeEnum.kTextUnits)
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Beckentyp2 erstellt")
+End Try
+
+'Prüft die Parameterliste auf den Parameter "Ventilvariante" und erstellt diesen, falls nötig
+Try
+    oVentilvariante = userParams("Ventilvariante1")
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Ventilvariante1 exisitert bereits")
+Catch
+    userParams.AddByValue("Ventilvariante1","",UnitsTypeEnum.kTextUnits)
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Ventilvariante1 erstellt")
+End Try
+
+Try
+    oVentilvariante = userParams("Ventilvariante2")
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Ventilvariante2 exisitert bereits")
+Catch
+    userParams.AddByValue("Ventilvariante2","",UnitsTypeEnum.kTextUnits)
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Ventilvariante2 erstellt")
+End Try
+
+'Prüft die Parameterliste auf den Parameter "Hoehe" und erstellt diesen, falls nötig
+Try
+    oVentilvariante = userParams("Hoehe")
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Hoehe exisitert bereits")
+Catch
+    userParams.AddByValue("Hoehe",2, UnitsTypeEnum.kMillimeterLengthUnits)
+	MultiValue.SetList("Hoehe",20, 30.5, 40)
+    Logger.Info(oPartDoc.DisplayName & " - Parameter Hoehe erstellt")
+End Try
+
+
+'Passt die Liste der Ventile aufgrund der Beckenauswahl an
+Select Parameter("Beckenbezeichnung1")
+	Case "Accento"
+		MultiValue.SetList("Ventilvariante1", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow")
+	Case "Daneo"
+		MultiValue.SetList("Ventilvariante1", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow" )
+	Case "SilverStar"
+		MultiValue.SetList("Ventilvariante1", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow")
+	Case "Comfort"
+		MultiValue.SetList("Ventilvariante1", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow", "1½"" Standrohr")
+	Case "Gastro MaXX"
+		MultiValue.SetList("Ventilvariante1", "3½"" Raumsparventil", "3½"" Siebstopfen")
+	Case "R44"
+		MultiValue.SetList("Ventilvariante1", "3½"" Tipoventil", "3½"" Raumsparventil")
+	Case "Vantis"
+		MultiValue.SetList("Ventilvariante1", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow", "3½"" Siebstopfen", "1½"" Standrohr")
+	Case Else
+		MessageBox.Show("Beckentyp in Parameter ""Beckenbezeichnung1"" nicht konfiguriert!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+End Select
+	
+
+Select Parameter("Beckenbezeichnung2")
+	Case "Accento"
+		MultiValue.SetList("Ventilvariante2", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow" )
+	Case "Daneo"
+		MultiValue.SetList("Ventilvariante2", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow")
+	Case "SilverStar"
+		MultiValue.SetList("Ventilvariante2", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow" )
+	Case "Comfort"
+		MultiValue.SetList("Ventilvariante2", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow", "1½"" Standrohr" )
+	Case "Gastro MaXX"
+		MultiValue.SetList("Ventilvariante2", "3½"" Raumsparventil", "3½"" Siebstopfen")
+	Case "R44"
+		MultiValue.SetList("Ventilvariante2", "3½"" Tipoventil", "3½"" Raumsparventil" )
+	Case "Vantis"
+		MultiValue.SetList("Ventilvariante2", "3½"" Tipoventil", "3½"" Raumsparventil", "3½"" TouchFlow", "3½"" Siebstopfen", "1½"" Standrohr")
+	Case Else
+		MessageBox.Show("Beckentyp in Parameter ""Beckenbezeichnung2"" nicht konfiguriert!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+End Select
+	
+'Passt die Liste der Beckentypen aufgrund der Beckenauswahl an
+Select Parameter("Beckenbezeichnung1")
+	Case "Accento"
+		MultiValue.SetList("Beckentyp1", "A18", "A34", "A40", "A45", "A50", "A55", "A65", "A75")
+	Case "Daneo"
+		MultiValue.SetList("Beckentyp1", "DAN18", "DAN34", "DAN40", "DAN45", "DAN50", "DAN55" )
+	Case "SilverStar"
+		MultiValue.SetList("Beckentyp1", "SIL9", "SIL18", "SIL34", "SIL45", "SIL50", "SIS50", "SIL55")
+	Case "Comfort"
+		MultiValue.SetList("Beckentyp1", "COM16", "COM34", "COM40")
+	Case "Gastro MaXX"
+		MultiValue.SetList("Beckentyp1", "GM45", "GM50", "GM55")
+	Case "R44"
+		MultiValue.SetList("Beckentyp1", "R44")
+	Case "Vantis"
+		MultiValue.SetList("Beckentyp1", "V34", "V40", "V45", "V50-35", "V-50-42", "V55")
+	Case Else
+		MessageBox.Show("Beckentyp in Parameter ""Beckenbezeichnung1"" nicht konfiguriert!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+End Select
+
+Select Parameter("Beckenbezeichnung2")
+	Case "Accento"
+		MultiValue.SetList("Beckentyp2", "A18", "A34", "A40", "A45", "A50", "A55", "A65", "A75")
+	Case "Daneo"
+		MultiValue.SetList("Beckentyp2", "DAN18", "DAN34", "DAN40", "DAN45", "DAN50", "DAN55" )
+	Case "SilverStar"
+		MultiValue.SetList("Beckentyp2", "SIL9", "SIL18", "SIL34", "SIL45", "SIL50", "SIS50", "SIL55")
+	Case "Comfort"
+		MultiValue.SetList("Beckentyp2", "COM16", "COM34", "COM40")
+	Case "Gastro MaXX"
+		MultiValue.SetList("Beckentyp2", "GM45", "GM50", "GM55")
+	Case "R44"
+		MultiValue.SetList("Beckentyp2", "R44")
+	Case "Vantis"
+		MultiValue.SetList("Beckentyp2", "V34", "V40", "V45", "V50-35", "V-50-42", "V55")
+	Case Else
+		MessageBox.Show("Beckentyp in Parameter ""Beckenbezeichnung2"" nicht konfiguriert!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error)
+End Select
+
+RuleParametersOutput()
+
+
+'Parameter in benutzerdefinieret Properties schreiben
+If Parameter("Hoehe") = 30.5 Then
+	Dim RoundHoehe As Integer
+	RoundHoehe = Floor(Parameter("Hoehe"))
+	iProperties.Value("Custom", "Hoehe") = RoundHoehe
+Else
+	iProperties.Value("Custom", "Hoehe") = Parameter("Hoehe").ToString
+End If	
+	
+iProperties.Value("Custom", "Stärke") = Parameter("Stärke").ToString
+iProperties.Value("Custom", "Beckenbezeichnung1") = Parameter("Beckenbezeichnung1").ToString
+iProperties.Value("Custom", "Beckentyp1") = Parameter("Beckentyp1").ToString
+iProperties.Value("Custom", "Ventilvariante1") = Parameter("Ventilvariante1").ToString
+iProperties.Value("Custom", "Beckenbezeichnung2") = Parameter("Beckenbezeichnung2").ToString
+iProperties.Value("Custom", "Beckentyp2") = Parameter("Beckentyp2").ToString
+iProperties.Value("Custom", "Ventilvariante2") = Parameter("Ventilvariante2").ToString

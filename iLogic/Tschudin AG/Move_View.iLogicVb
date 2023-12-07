@@ -1,0 +1,62 @@
+﻿Sub Main()
+' Erstellt von:  Jan Stäger 
+' Version:       IV2021
+' Datum:         03.03.2021
+' Version:       0.11
+' Changelog
+' xx.xx.xx:
+'Beschreibung: Die Ansicht im aktiven Blatt wird an den äusseren, rechten Rand der Zeichnung bewegt.
+
+
+'Def. the Widht of Drawing
+Dim oDoc As DrawingDocument
+oDoc = ThisApplication.ActiveDocument
+Dim oSheet As Sheet
+	oSheet = oDoc.ActiveSheet
+
+	Dim sheetSize As String
+	Dim xrev As Double
+	sheetSize = oSheet.Size
+	sheetOrientation = oSheet.Orientation
+
+	If sheetSize = "9993" Then
+		If sheetOrientation = "10243" Then	
+			xrev = 841
+		Else
+			xrev = 1189
+		End If
+	Else If sheetSize = "9994" Then
+		If sheetOrientation = "10243" Then	
+			xrev = 594
+		Else
+			xrev = 841
+		End If
+	Else If sheetSize = "9995" Then
+		If sheetOrientation = "10243" Then	
+			xrev = 420
+		Else
+			xrev = 594
+		End If
+	Else If sheetSize = "9996" Then
+		If sheetOrientation = "10243" Then	
+			xrev = 297
+		Else
+			xrev = 420
+		End If
+	Else If sheetSize = "9997" Then
+		If sheetOrientation = "10243" Then	
+			xrev = 210
+		Else
+			xrev = 297
+		End If
+	End If
+	
+oDrawingDoc = ThisDrawing.Document
+oSheet = ActiveSheet.Sheet
+oDrawingView = oSheet.DrawingViews(1)
+oPart = ActiveSheet.View(oDrawingView.Name).ModelDocument
+
+'Move View	
+ActiveSheet.View(oDrawingView.Name).SetSpacingToCorner(xrev+100, 0, SheetCorner.BottomLeft)
+
+End Sub

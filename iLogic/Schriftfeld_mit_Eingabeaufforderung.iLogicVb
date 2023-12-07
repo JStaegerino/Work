@@ -1,0 +1,39 @@
+﻿' Set a reference to the drawing document.
+' This assumes a drawing document is active.
+Dim oDrawDoc As DrawingDocument
+oDrawDoc = ThisApplication.ActiveDocument
+
+ ' Obtain a reference to the desired border defintion.
+Dim oTitleBlockDef As TitleBlockDefinition
+oTitleBlockDef = oDrawDoc.TitleBlockDefinitions.Item("MuM")
+
+ Dim oSheet As Sheet
+oSheet = oDrawDoc.ActiveSheet
+
+ ' Check to see if the sheet already has a title block and delete it if it does.
+If Not oSheet.TitleBlock Is Nothing Then
+oSheet.TitleBlock.Delete
+End If
+
+ ' This title block definition contains one prompted string input. An array
+' must be input that contains the strings for the prompted strings.
+
+Dim i As Integer
+Dim defText As TextBox
+For Each defText In oTitleBlockDef.Sketch.TextBoxes
+If defText.FormattedText Like "*Prompt ReadOnlyUniqueID*" Then
+i = i + 1
+End If
+Next
+Dim PromptStrings() As String
+ReDim PromptStrings(i)
+For t = 0 To UBound(PromptStrings)
+PromptStrings(t) = "EMPTY"
+Next t
+' If defText.Text = "<Eingabeaufforderung für Feld eingeben>" Then
+' oPromptValue = tblock.GetResultText(defText)
+
+
+ ' Add an instance of the title block definition to the sheet.
+Dim oTitleBlock As TitleBlock
+oTitleBlock = oSheet.AddTitleBlock(oTitleBlockDef, , PromptStrings)

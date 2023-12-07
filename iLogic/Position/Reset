@@ -1,0 +1,18 @@
+/// <summary>
+        /// Resets x,y, z position and rotation to "default". The same as if you place something with the place command. Should be used before any other translation is performed. This makes sure there is a certain start situation.
+        /// </summary>
+        /// <param name="occurrenceName">Name of the occurrence.</param>
+        internal void SetToIdentity(string occurrenceName)
+        {
+            var asmDefinition = _activeDocument.ComponentDefinition;
+            var occurrenceToReset = GetOccurrence(occurrenceName, asmDefinition);
+            if (occurrenceToReset is null)
+            {
+                _logger.Log($"Failed to find an occurrence with the name: {occurrenceName}",
+                    LogLevel.Error);
+                return;
+            }
+            Matrix occMatrix = occurrenceToReset.Transformation;
+            occMatrix.SetToIdentity();
+            occurrenceToReset.Transformation = occMatrix;
+        }

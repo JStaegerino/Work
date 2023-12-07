@@ -1,0 +1,22 @@
+' Mensch und Maschine Schweiz AG (Suhr)
+' 
+' Copyright 1992-2021 MuM Schweiz AG  - Jan Staeger -
+' Beschreibung: Erstellt eine Abwicklung
+' Erstellt  am / 22.12.2021 jst
+' Angepasst am / 	
+
+Dim oDoc As PartDocument
+oDoc = ThisApplication.ActiveDocument
+
+'Sheet Metal Reference
+Dim oCompDef As SheetMetalComponentDefinition
+oCompDef = oDoc.ComponentDefinition
+
+'sheetmetal unfold
+If oCompDef.HasFlatPattern = False Then
+	oCompDef.Unfold
+Else
+End If
+
+'sheetmetal exit flatpattern
+oCompDef.FlatPattern.ExitEdit()

@@ -1,0 +1,46 @@
+﻿Sub Main()
+' Erstellt von:  Jan Stäger 
+' Version:       IV2021
+' Datum:         02.12.2020
+' Version:       0.11
+' Changelog
+'03.03.2021:	V0.11: Ansichten auf Stücklisten werden an rechten unteren Rand der Zeichnung verschoben
+' xx.xx.xx:
+
+'Beschreibung: Kopiert die bestehende Ansicht auf die zwei Blätter mit dem Namen "Stückliste_DE" und "Stückliste_EN". 
+
+Dim oDrawDoc As DrawingDocument
+ 	oDrawDoc = ThisApplication.ActiveDocument
+
+Dim oSheet As Sheet
+	oSheet = oDrawDoc.Sheets.Item(1)
+oSheet.Activate
+
+Dim oView As DrawingView
+If oDrawDoc.ActiveSheet.DrawingViews.Count < 1 Then
+    MsgBox ("Keine Ansicht im ersten Blatt gefunden!")
+    Return
+End If
+
+	oView = oDrawDoc.ActiveSheet.DrawingViews(1)
+   	
+	
+ '  copy View from activated Sheet to other Sheets
+    For Each Sheet In oDrawDoc.Sheets
+        If Sheet.Name Like "Stückliste_DE*" Then
+           		oSheetDE = Sheet
+           Call oView.CopyTo(oSheetDE)
+		   oSheetDE.Activate
+		   iLogicVb.RunExternalRule("Move_View")
+        ElseIf Sheet.Name Like "Stückliste_EN*" Then
+           		oSheetEN = Sheet
+           Call oView.CopyTo(oSheetEN)
+		   oSheetEN.Activate
+		    iLogicVb.RunExternalRule("Move_View")
+        End If
+    Next
+	
+oSheet.Activate
+
+
+End Sub
