@@ -1,0 +1,58 @@
+Sub Main()
+' Erstellt von: Jan Stäger
+' Version: IV2024
+' Datum: 06.12.2023
+Const Version = "0.1"
+' Changelog
+
+' Beschreibung: Fügt einen vorgegebenen Parameter zum selectiertem Bauteil hinzu
+
+
+Logger.Debug(iLogicVB.RuleName & " " & Version & " was just started ...")
+
+If (ThisDoc.Document.Documenttype <> DocumentTypeEnum.kAssemblyDocumentObject)
+    Logger.Debug("Wrong document type. Has to be assemlby or part document.")
+    Exit Sub
+End If
+
+
+'Make a ref to active doc
+Dim oDoc As Document
+oDoc = ThisApplication.ActiveDocument
+
+'selected components collection
+Dim oSelected As New List(Of ComponentOccurrence)
+
+Dim oCount As Integer
+oCount = oDoc.SelectSet.Count
+
+'Check that at least 1 is selected
+If oCount = 0 Then
+    MessageBox.Show("Bitte ein Bauteil auswählen.", "iLogic")
+    Exit Sub
+End If
+
+'createlist with values
+Dim paramList As New ArrayList
+paramList.Add("Spare Part")
+paramList.Add("Wear Part")
+paramList.Add("")
+
+paramSelect = InputListBox("Bitte Parameter auswählen", paramList)
+
+Dim ref As Object
+For Each ref In oDoc.SelectSet
+    If TypeOf ref Is Inventor.ComponentOccurrence Then
+
+        Dim Occ As Inventor.ComponentOccurrence
+        Occ = ref
+        
+        ' create new object
+        Dim docObj = StandardObjectFactory.Create(Occ.Definition.Document)
+        docObj.iProperties.Value("custom", "Spare Wear Part") = paramSelect
+    End If
+next
+
+Logger.Debug(iLogicVb.RuleName & " " & Version & "did finish.")
+
+End Sub
