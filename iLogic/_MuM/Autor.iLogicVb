@@ -1,0 +1,12 @@
+﻿If iProperties.Value("Summary", "Author") = "" Then
+
+Dim customProperty as String = "Vault Author"
+
+	Try
+		iProperties.Value("Summary", "Author") = iProperties.Value("Custom", customProperty)
+	Catch
+		Logger.Debug("Keine Benutzerpropertie mit dem Namen " & customProperty & " gefunden")
+	End Try
+Else
+	Logger.Debug("Autor ist ausgefüllt")
+End If
