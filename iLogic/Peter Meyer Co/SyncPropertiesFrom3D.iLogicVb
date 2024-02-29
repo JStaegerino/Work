@@ -1,8 +1,9 @@
-' Erstellt von:  Rolf Klos
+﻿' Erstellt von:  Rolf Klos
 ' Version:       IV2022
 ' Datum:         11.12.2021
-' Version:       0.1
+' Version:       0.2
 ' Changelog
+' 29.01.2024 / jst : Try & Catch eingebaut um zu prüfen, ob es sich um eine Zeichnung für customX Komponennten handelt.
 ' xx.xx.xx:		xxx / xxx	
 
 ' Beschreibung: Kopiert basierend auf der ersten Ansicht die ausgesuchten Properties in die IDW. Diese Regel beachtet den Model State. Es werden die Properties
@@ -19,25 +20,30 @@
 ' logging wenn gewünscht
 
 Sub Main()
-	
+
+Try 
+	Parameter("customX_component") = True
+	Logger.Debug("It's a costumX Drawing")
+Catch
+
 	'### CUSTOM EDITS BY USER ###
 	Dim propertyList As New List(Of PropertyDefinition) From _
 	{
-		New PropertyDefinition("Title", "Summary"),
-		New PropertyDefinition("Subject", "Summary"),
-		New PropertyDefinition("Category", "Summary"),
-		New PropertyDefinition("Keywords", "Summary"),
-		New PropertyDefinition("Description", "Project")
+	New PropertyDefinition("Title", "Summary"),
+	New PropertyDefinition("Subject", "Summary"),
+	New PropertyDefinition("Category", "Summary"),
+	New PropertyDefinition("Keywords", "Summary"),
+	New PropertyDefinition("Description", "Project")
 	}
-		
-	
+
+
 	alwaysCreateProperties = True ' define if properties should be created empty if not found in referenced document
-	
+
 	'### CUSTOM EDITS BY USER ###
-	
-' ##############################################################################################################################
+
+	' ##############################################################################################################################
 	Logger.Debug(Date.Now.ToString & " : Rule for " & ThisDoc.FileName & " started.")
-	
+
 	If ThisApplication.ActiveDocument.sheets(1).DrawingViews.Count > 0 Then
 		' check if the defined properties exists
 		If alwaysCreateProperties = True Then
@@ -45,67 +51,68 @@ Sub Main()
 			CheckPropertiesExists(propertyList)
 			Logger.Debug("Creating Properties finished")
 		End If
-		
+
 		' sync properties from belonging 3D Document
 		Logger.Debug("Syncing Properies starting")
 		SyncProperties(propertyList)
 		Logger.Debug("Syncing Properies finished")
 	Else
-		Logger.Debug(Date.Now.ToString & " : " &ThisDoc.FileName & " has no View on Sheet 1!")
+		Logger.Debug(Date.Now.ToString & " : " & ThisDoc.FileName & " has no View on Sheet 1!")
 		Logger.Debug(Date.Now.ToString & " : Rule for " & ThisDoc.FileName & " ended. ==> Cancel")
 	End If
-	
+
 	Logger.Debug(Date.Now.ToString & " : Rule for " & ThisDoc.FileName & " ended. ==> Action finished")
+End Try
 End Sub
 
 Function SyncProperties(propertyList As List(Of PropertyDefinition))
-		Dim drawingDoc As DrawingDocument
-		drawingDoc = ThisApplication.ActiveDocument
-	
-		Dim sheet As Sheet
-		sheet = drawingDoc.ActiveSheet
-		
-		Dim drawingView As DrawingView
-	    drawingView = Sheet.DrawingViews.Item(1)
-		
-		Dim reference As Document
-	    reference = drawingView.ReferencedDocumentDescriptor.ReferencedDocument
-		
-		For Each item As PropertyDefinition In propertyList
-			Try
-				If item.PropertyType = "Custom" Then
-					Logger.Debug(Date.Now.ToString & " : Try Syncing(Custom) " & item.PropertyName & "...")
-					iProperties.Value("Custom", item.PropertyName) = reference.PropertySets("Inventor User Defined Properties")(item.PropertyName).Value
-					Logger.Debug(Date.Now.ToString & " : Syncing " & item.PropertyName & " successful")
-				Else If item.PropertyType = "Project" Then
-					Logger.Debug(Date.Now.ToString & " : Try Syncing(Project) " & item.PropertyName & "...")
-					iProperties.Value("Project", item.PropertyName) = reference.PropertySets("Design Tracking Properties")(item.PropertyName).Value
-					Logger.Debug(Date.Now.ToString & " : Syncing " & item.PropertyName & " successful")
-				Else ' "Summary"
-					Logger.Debug(Date.Now.ToString & " : Try Syncing(Summary) " & item.PropertyName & "...")
-					iProperties.Value("Summary", item.PropertyName) = reference.PropertySets("Inventor Summary Information")(item.PropertyName).Value
-					Logger.Debug(Date.Now.ToString & " : Syncing " & item.PropertyName & " successful")
-				End If
-			Catch
-				Logger.Debug(Date.Now.ToString & " : Could not sync " & item.PropertyName)
-			End Try
-		Next
+	Dim drawingDoc As DrawingDocument
+	drawingDoc = ThisApplication.ActiveDocument
+
+	Dim sheet As Sheet
+	sheet = drawingDoc.ActiveSheet
+
+	Dim drawingView As DrawingView
+	drawingView = Sheet.DrawingViews.Item(1)
+
+	Dim reference As Document
+	reference = drawingView.ReferencedDocumentDescriptor.ReferencedDocument
+
+	For Each item As PropertyDefinition In propertyList
+		Try
+			If item.PropertyType = "Custom" Then
+				Logger.Debug(Date.Now.ToString & " : Try Syncing(Custom) " & item.PropertyName & "...")
+				iProperties.Value("Custom", item.PropertyName) = reference.PropertySets("Inventor User Defined Properties")(item.PropertyName).Value
+				Logger.Debug(Date.Now.ToString & " : Syncing " & item.PropertyName & " successful")
+			Else If item.PropertyType = "Project" Then
+			Logger.Debug(Date.Now.ToString & " : Try Syncing(Project) " & item.PropertyName & "...")
+			iProperties.Value("Project", item.PropertyName) = reference.PropertySets("Design Tracking Properties")(item.PropertyName).Value
+			Logger.Debug(Date.Now.ToString & " : Syncing " & item.PropertyName & " successful")
+			Else ' "Summary"
+				Logger.Debug(Date.Now.ToString & " : Try Syncing(Summary) " & item.PropertyName & "...")
+				iProperties.Value("Summary", item.PropertyName) = reference.PropertySets("Inventor Summary Information")(item.PropertyName).Value
+				Logger.Debug(Date.Now.ToString & " : Syncing " & item.PropertyName & " successful")
+			End If
+		Catch
+			Logger.Debug(Date.Now.ToString & " : Could not sync " & item.PropertyName)
+		End Try
+	Next
 End Function
 Function CheckPropertiesExists(propertyList As List(Of PropertyDefinition))
-		
+
 	' get custom property set
 	Dim customPropertySet As PropertySet
 	customPropertySet = ThisApplication.ActiveDocument.PropertySets.Item("Inventor User Defined Properties")
-	
+
 	' everything that is custom could be missing
 	' check if it is existing
 	' if not create it with the correct type
 	For Each item As PropertyDefinition In propertyList
 		If item.PropertyType = "Custom" Then
-			
+
 			Try
 				Logger.Debug(iProperties.Value("Custom", item.PropertyName)) ' this will always run / the log level just decides if it is printed 
-			Catch			
+			Catch
 				Select Case item.PropertyDataType
 					Case "text"
 						Logger.Debug(Date.Now.ToString & " : Property with Name: " & item.PropertyName & "Type: " & item.PropertyDataType)
@@ -120,23 +127,23 @@ Function CheckPropertiesExists(propertyList As List(Of PropertyDefinition))
 						Logger.Debug(Date.Now.ToString & " : Property with Name: " & item.PropertyName & "Type: " & item.PropertyDataType)
 						iProperties.Value("Custom", item.PropertyName) = True
 					Case Else
-						' not possible because then it will be of type "text"
-						Logger.Debug(Date.Now.ToString & " : Property with Name: " & item.PropertyName & "Type: " & item.PropertyDataType)
-						iProperties.Value("Custom", item.PropertyName) = ""
-				End Select
+			' not possible because then it will be of type "text"
+			Logger.Debug(Date.Now.ToString & " : Property with Name: " & item.PropertyName & "Type: " & item.PropertyDataType)
+			iProperties.Value("Custom", item.PropertyName) = ""
+			End Select
 			End Try
-		End If
-	Next		
+			End If
+	Next
 End Function
 
 Public Class PropertyDefinition
-	    Public Property PropertyName As String
-		Public Property PropertyType As String
-		Public Property PropertyDataType As String
-			
-		Public Sub New(ByVal propName As String, ByVal propType As String, Optional propDataType As String = "text")
-			PropertyName = propName
-			PropertyType = propType
-			PropertyDataType = propDataType
-		End Sub
+	Public Property PropertyName As String
+	Public Property PropertyType As String
+	Public Property PropertyDataType As String
+
+	Public Sub New(ByVal propName As String, ByVal propType As String, Optional propDataType As String = "text")
+		PropertyName = propName
+		PropertyType = propType
+		PropertyDataType = propDataType
+	End Sub
 End Class
