@@ -1,0 +1,1 @@
+Stop-Process -Name "Python3.11" -PassThru -Force 
