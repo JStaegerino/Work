@@ -1,0 +1,35 @@
+﻿Dim oDoc As Document
+oDoc = ThisApplication.ActiveDocument
+
+' Prüfung ob schon ein Arbeitspunkt am Schwerpunkt existiert
+Dim oCenterOfMass As Point
+oCenterOfMass = oDoc.ComponentDefinition.MassProperties.CenterOfMass
+
+'Fehler Ignorieren später in der If Anweisung auswerten
+On Error Resume Next
+
+Dim oWorkPoint As WorkPoint
+oWorkPoint = oDoc.ComponentDefinition.WorkPoints.item("Schwerpunkt")
+
+If Err.Number = 0 Then
+	'Der vorhandene Arbeitspunkt wird gelöscht
+	oWorkPoint.Delete
+
+	'Ein neuer Arbeitspunkt wird am aktuellen Schwerpunkt angelegt
+	oWorkPoint = oDoc.ComponentDefinition.WorkPoints.AddFixed(oCenterOfMass)
+
+	'Arbeitspunkt wird umbenannt
+	oWorkPoint.Name = "Schwerpunkt"
+
+	'Dokument wird aktualisiert
+	oDoc.Update
+	MessageBox.Show("Der vorhandene Arbeitspunkt wurde ersetzt!", "MCDCAD.de Info")
+Else
+	' Es wird ein neuer Arbeitspunkt am Schwerpunkt eingefügt.
+	oWorkPoint = oDoc.ComponentDefinition.WorkPoints.AddFixed(oCenterOfMass)
+
+	' Der entstandene Arbeitspunkt wird umbenannt
+	oWorkPoint.Name = "Schwerpunkt"
+	oDoc.Update
+	MessageBox.Show("Ein Arbeitspunkt wurde am aktuellen Schwerpunkt eingefügt", "MCDCAD.de Info")
+End If
